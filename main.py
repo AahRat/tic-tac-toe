@@ -7,6 +7,48 @@ def display():
   print("---+---+---")
   print(board[7]+"|"+board[8]+"|"+board[9])
 
+def minimax(board, player):
+  if checkForwin(" X "):
+    return 1
+  if checkForwin(" O "):
+    return -1
+  if checkForDraw():
+    return 0
+  
+  if player == " X ":
+    bestScore = -10
+    for i in board.keys():
+      if board[i] == "   ":
+        board[i] = " X "
+        score = minimax(board, "User")
+        board[i] = "   "
+        if score>bestScore:
+          bestScore = score
+    return bestScore
+  else:
+    bestScore = 10
+    for i in board.keys():
+      if board[i] == "   ":
+        board[i] = " O "
+        score = minimax(board, " X ")
+        board[i] = "   "
+        if score<bestScore:
+          bestScore = score
+    return bestScore
+
+def computerMove():
+  bestPosition = 0
+  bestScore = -10
+  for i in board.keys():
+    if board[i] == "   ":
+      board[i] = " X "
+      score = minimax(board, "User")
+      board[i] = "   "
+      if score>bestScore:
+        bestScore = score
+        bestPosition = i
+  return bestPosition
+
 def checkForDraw():
   for i in board.keys():
     if board[i] == "   ": 
@@ -40,7 +82,10 @@ player = " X "
 
 while True:
   display()
-  position = int(input(f"Enter a Position(1-9) for {player}: "))
+  if player == ' X ':
+    position  = computerMove()
+  else:
+    position = int(input(f"Enter a Position(1-9) for {player}: ")) 
 
 
   if isEmpty(position):
